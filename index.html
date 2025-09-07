@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portal — สวย ๆ แจ่ม ๆ</title>
+  <style>
+    /* ---------- Fonts ---------- */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+    :root{
+      --bg1: #0f172a;
+      --glass: rgba(255,255,255,0.06);
+      --accent1: linear-gradient(135deg,#ff8a00 0%,#e52e71 50%,#7b5cff 100%);
+      --accent2: linear-gradient(135deg,#06b6d4 0%,#7c3aed 100%);
+      --card: rgba(255,255,255,0.03);
+      --muted: rgba(255,255,255,0.65);
+    }
+    *{box-sizing:border-box;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+    html,body{height:100%;margin:0;background:radial-gradient(1200px 600px at 10% 10%, rgba(123,92,255,0.12), transparent), radial-gradient(900px 400px at 90% 90%, rgba(255,138,0,0.06), transparent), var(--bg1); color:#fff}
+    a{color:inherit;text-decoration:none}
+
+    /* ---------- Layout ---------- */
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px}
+    .panel{width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(2,6,23,0.6);display:grid;grid-template-columns:420px 1fr;gap:24px;align-items:center}
+
+    /* ---------- Left: Login card with locked image ---------- */
+    .loginCard{padding:22px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.03)}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:56px;height:56px;border-radius:12px;background:var(--accent1);display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:0.6px;box-shadow:0 6px 18px rgba(123,92,255,0.12) inset}
+    .brand h1{margin:0;font-size:18px}
+    .brand p{margin:0;font-size:13px;color:var(--muted)}
+
+    .lockedImage{position:relative;margin-top:18px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+    .lockedImage img{display:block;width:100%;height:260px;object-fit:cover;filter:contrast(1.02) saturate(1.02)}
+    .lockOverlay{position:absolute;left:12px;top:12px;background:rgba(0,0,0,0.45);padding:8px 10px;border-radius:999px;font-size:13px;display:flex;align-items:center;gap:8px}
+    .lockOverlay svg{width:14px;height:14px;opacity:0.9}
+    .lockedHint{position:absolute;right:12px;bottom:12px;background:linear-gradient(90deg, rgba(0,0,0,0.35), rgba(255,255,255,0.02));padding:8px 12px;border-radius:10px;font-size:13px}
+
+    .loginForm{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+    .input{background:var(--card);border-radius:10px;padding:12px 14px;border:1px solid rgba(255,255,255,0.02);outline:none;color:#fff}
+    .btn{padding:12px 16px;border-radius:12px;border:0;font-weight:700;cursor:pointer}
+    .btnPrimary{background:var(--accent1);background-clip:text;color:transparent;position:relative}
+    .btnPrimary::before{content:'';position:absolute;inset:0;border-radius:12px;background:var(--accent1);z-index:-1;opacity:0.95;filter:drop-shadow(0 8px 30px rgba(229,46,113,0.12))}
+    .btnGhost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+
+    /* ---------- Right: Dashboard preview ---------- */
+    .preview{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));min-height:420px}
+    .nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .chipRow{display:flex;gap:8px}
+    .chip{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.03);font-weight:600}
+
+    .bigTitle{font-size:22px;margin:6px 0}
+    .gridFuncs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+    .funcCard{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:transform .18s ease, box-shadow .18s;min-height:96px;display:flex;flex-direction:column;justify-content:center}
+    .funcCard:hover{transform:translateY(-6px);box-shadow:0 18px 34px rgba(2,6,23,0.6)}
+    .funcCard h3{margin:0;font-size:15px}
+    .funcCard p{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:960px){.panel{grid-template-columns:1fr;}.lockedImage img{height:200px}}
+
+    /* little animations */
+    .sparkle{position:absolute;right:-40px;top:-40px;opacity:0.07;width:240px;height:240px;background:radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 20%), conic-gradient(from 120deg, rgba(255,255,255,0.03), transparent 60%);transform:rotate(12deg)}
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+
+      <!-- LEFT: Login with locked image -->
+      <div class="loginCard">
+        <div class="brand">
+          <div class="logo">AZ</div>
+          <div>
+            <h1>Welcome back, อัซ</h1>
+            <p>ล็อกอินเข้าสู่พื้นที่ของคุณ — สวย ๆ แจ่ม ๆ</p>
+          </div>
+        </div>
+
+        <div class="lockedImage" title="รูปภาพล็อก — ไม่สามารถเปลี่ยนได้ที่หน้านี้">
+          <!-- path to uploaded image -->
+          <img src="/mnt/data/4A69C9D4-E8C6-4811-ADB4-AD2569C78F7C.jpeg" alt="locked photo">
+          <div class="lockOverlay">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color:#fff"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <strong>Photo locked</strong>
+            <span style="opacity:.7;font-weight:500">(ล็อกอินเท่านั้น)</span>
+          </div>
+          <div class="lockedHint">รูปนี้แสดงบนหน้าล็อกอิน</div>
+        </div>
+
+        <form class="loginForm" onsubmit="event.preventDefault(); doLogin();">
+          <input class="input" id="username" placeholder="ชื่อผู้ใช้" required>
+          <input class="input" id="password" type="password" placeholder="รหัสผ่าน" required>
+          <div style="display:flex;gap:10px;margin-top:6px">
+            <button class="btn btnPrimary" type="submit">เข้าสู่ระบบ</button>
+            <button type="button" class="btn btnGhost" onclick="quickGuest()">เข้าสู่ระบบแบบผู้เยี่ยมชม</button>
+          </div>
+        </form>
+
+        <p style="font-size:13px;color:var(--muted);margin-top:12px">ไม่ใช่สมาชิก? <a href="#" onclick="openCategories()">เลือกหมวดหมู่</a></p>
+      </div>
+
+      <!-- RIGHT: Preview / Dashboard -->
+      <div class="preview">
+        <div class="nav">
+          <div class="chipRow">
+            <div class="chip">เวอร์ชันทดลอง</div>
+            <div class="chip">สวย ๆ</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btnGhost" onclick="logoutToCategories()">ออก (ไปหน้าเลือกหมวดหมู่)</button>
+            <button class="btn btnPrimary" onclick="openNewPage('search')">Search</button>
+          </div>
+        </div>
+
+        <div class="bigTitle">แดชบอร์ดตัวอย่าง</div>
+        <p style="color:var(--muted)">คลิกที่ไอคอนฟังก์ชันด้านล่าง — ฟังก์ชันที่ต้องเป็นหน้าใหม่จะเปิดในแท็บใหม่</p>
+
+        <div class="gridFuncs">
+          <div class="funcCard" onclick="openNewPage('search')">
+            <h3>ค้นหา (หน้าใหม่)</h3>
+            <p>ค้นหาสิ่งต่าง ๆ — เปิดเป็นหน้าใหม่</p>
+          </div>
+          <div class="funcCard" onclick="openNewPage('gallery')">
+            <h3>Gallery</h3>
+            <p>ดูรูป ภาพรวมผลงาน</p>
+          </div>
+          <div class="funcCard" onclick="openNewPage('profile')">
+            <h3>โปรไฟล์</h3>
+            <p>จัดการข้อมูลส่วนตัว</p>
+          </div>
+
+          <div class="funcCard" onclick="toast('Coming soon')">
+            <h3>ตั้งค่า</h3>
+            <p>ปรับแต่งประสบการณ์ของคุณ</p>
+          </div>
+          <div class="funcCard" onclick="openNewPage('editor')">
+            <h3>Editor</h3>
+            <p>เครื่องมือแก้ไข — หน้าต่างใหม่</p>
+          </div>
+          <div class="funcCard" onclick="openNewPage('help')">
+            <h3>ช่วยเหลือ</h3>
+            <p>คู่มือและคำถามที่พบบ่อย</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function doLogin(){
+      const u=document.getElementById('username').value||'User';
+      // playful welcome
+      toast('ยินดีต้อนรับ ' + u + '! กำลังไปที่หน้าหลัก...');
+      setTimeout(()=>{
+        showDashboard(u);
+      },900);
+    }
+
+    function quickGuest(){
+      toast('เข้าสู่ระบบแบบผู้เยี่ยมชม');
+      setTimeout(()=> showDashboard('Guest'),800);
+    }
+
+    function showDashboard(name){
+      // replace preview with a welcome modal (simple)
+      document.querySelector('.bigTitle').innerText = 'ยินดีต้อนรับกลับ, ' + name;
+      document.querySelector('.preview p').innerText = 'เลือกฟังก์ชันจากกล่องด้านล่าง หรือเปิดหน้าค้นหาในแท็บใหม่โดยกดปุ่ม Search.';
+      // subtle glow on primary
+      document.querySelectorAll('.btnPrimary').forEach(b=>b.style.boxShadow='0 10px 34px rgba(123,92,255,0.12)');
+    }
+
+    function openCategories(){
+      // navigate the user to a simple categories selection UI inside the right panel
+      const preview=document.querySelector('.preview');
+      preview.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:20px;font-weight:700">เลือกหมวดหมู่</div>
+            <div style="color:rgba(255,255,255,0.7);margin-top:6px">เลื่อนและเลือกหมวดที่ต้องการ</div>
+          </div>
+          <div><button class="btn btnGhost" onclick="location.reload()">กลับ</button></div>
+        </div>
+        <div style="margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div class="funcCard" onclick="toast('คุณเลือกหมวด ข่าว')"><h3>ข่าว</h3><p style='color:var(--muted)'>ข้อมูลอัพเดต</p></div>
+          <div class="funcCard" onclick="toast('คุณเลือกหมวด บทความ')"><h3>บทความ</h3><p style='color:var(--muted)'>อ่าน-เขียน</p></div>
+          <div class="funcCard" onclick="toast('คุณเลือกหมวด ร้านค้า')"><h3>ร้านค้า</h3><p style='color:var(--muted)'>ซื้อขาย</p></div>
+          <div class="funcCard" onclick="toast('คุณเลือกหมวด ชุมชน')"><h3>ชุมชน</h3><p style='color:var(--muted)'>พูดคุย</p></div>
+          <div class="funcCard" onclick="toast('คุณเลือกหมวด กีฬา')"><h3>กีฬา</h3><p style='color:var(--muted)'>กิจกรรม</p></div>
+          <div class="funcCard" onclick="toast('คุณเลือกหมวด การศึกษา')"><h3>การศึกษา</h3><p style='color:var(--muted)'>การเรียนรู้</p></div>
+        </div>
+      `;
+    }
+
+    function logoutToCategories(){
+      // on logout, go to categories (as requested)
+      toast('ออกจากระบบ — ไปยังหน้าเลือกหมวดหมู่');
+      setTimeout(openCategories,700);
+    }
+
+    function toast(txt){
+      const s=document.createElement('div');
+      s.innerText=txt;
+      s.style.position='fixed';
+      s.style.left='50%';
+      s.style.transform='translateX(-50%)';
+      s.style.bottom='36px';
+      s.style.padding='10px 16px';
+      s.style.borderRadius='10px';
+      s.style.background='linear-gradient(90deg, rgba(0,0,0,0.5), rgba(255,255,255,0.02))';
+      s.style.border='1px solid rgba(255,255,255,0.04)';
+      s.style.color='#fff';
+      s.style.zIndex=9999;
+      s.style.fontWeight=600;
+      document.body.appendChild(s);
+      setTimeout(()=>{s.style.opacity='0';s.style.transition='opacity .5s';},1600);
+      setTimeout(()=>s.remove(),2200);
+    }
+
+    // openNewPage builds a small full HTML for each destination and opens in a new tab
+    function openNewPage(page){
+      const pages = {
+        search: {
+          title:'Search — ค้นหา',
+          body:`<div style="font-family:Inter,system-ui;min-height:100vh;background:linear-gradient(120deg,#0f172a, #071029);color:#fff;padding:40px"><div style="max-width:900px;margin:0 auto;background:rgba(255,255,255,0.02);border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,0.03)"><h1>Search</h1><p style='color:rgba(255,255,255,0.7)'>ค้นหาสิ่งต่าง ๆ — ตัวอย่างหน้าแสดงผลการค้นหา</p><div style='margin-top:14px;display:flex;gap:8px'><input placeholder="พิมพ์คำค้น" style="flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff"><button style="padding:12px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,#ff8a00,#7b5cff);font-weight:700;cursor:pointer">ค้นหา</button></div><div style="margin-top:18px;color:rgba(255,255,255,0.8)">ผลการค้นหา (ตัวอย่าง)</div><ul style="margin-top:12px;line-height:1.9;color:rgba(255,255,255,0.9)"><li>ผลที่ 1 — ลิงก์ตัวอย่าง</li><li>ผลที่ 2 — ลิงก์ตัวอย่าง</li><li>ผลที่ 3 — ลิงก์ตัวอย่าง</li></ul></div></div>`
+        },
+        gallery:{title:'Gallery — ภาพรวม', body:`<div style="min-height:100vh;background:linear-gradient(120deg,#071029,#0b1b2f);padding:34px;color:#fff;font-family:Inter"><div style="max-width:1100px;margin:0 auto"><h1>Gallery</h1><p style='color:rgba(255,255,255,0.7)'>ตัวอย่างการแสดงผลงาน</p><div style='display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px'>${Array.from({length:6}).map((_,i)=>`<div style="border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.02);padding:10px"><div style="height:140px;background:linear-gradient(90deg,rgba(123,92,255,0.12),rgba(255,138,0,0.06));display:flex;align-items:center;justify-content:center">รูป ${i+1}</div><div style="padding:8px;color:rgba(255,255,255,0.9)">คำอธิบายสั้น ๆ</div></div>`).join('')}</div></div></div>`},
+        profile:{title:'Profile — โปรไฟล์', body:`<div style="min-height:100vh;background:linear-gradient(120deg,#071029,#0b1b2f);padding:34px;color:#fff;font-family:Inter"><div style="max-width:900px;margin:0 auto"><h1>โปรไฟล์ของคุณ</h1><p style='color:rgba(255,255,255,0.7)'>จัดการข้อมูลส่วนตัว</p><div style='margin-top:14px;background:rgba(255,255,255,0.02);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)'><p><strong>ชื่อ:</strong> อัซ</p><p><strong>อีเมล:</strong> az@example.com</p></div></div></div>`},
+        editor:{title:'Editor — เครื่องมือ', body:`<div style="min-height:100vh;background:linear-gradient(120deg,#071029,#0b1b2f);padding:34px;color:#fff;font-family:Inter"><div style="max-width:1100px;margin:0 auto"><h1>Editor</h1><p style='color:rgba(255,255,255,0.7)'>เครื่องมือแก้ไขตัวอย่าง</p><textarea style="width:100%;height:360px;border-radius:10px;padding:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);color:#fff">// เริ่มเขียนโค้ดของคุณที่นี่</textarea></div></div>`},
+        help:{title:'Help — ช่วยเหลือ', body:`<div style="min-height:100vh;background:linear-gradient(120deg,#071029,#0b1b2f);padding:34px;color:#fff;font-family:Inter"><div style="max-width:900px;margin:0 auto"><h1>ช่วยเหลือ</h1><p style='color:rgba(255,255,255,0.7)'>คำถามที่พบบ่อย</p><ul style='margin-top:12px;color:rgba(255,255,255,0.9)'><li>วิธีล็อกอิน?</li><li>ฉันจะเปลี่ยนรูปได้อย่างไร?</li></ul></div></div>`}
+      };
+
+      const p = pages[page] || {title:'Page', body:'<div>Coming soon</div>'};
+      const newWin = window.open();
+      if(!newWin) return alert('ไม่สามารถเปิดหน้าต่างใหม่ — อาจโดนบล๊อกโดยบราวเซอร์');
+      newWin.document.write(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${p.title}</title></head><body>${p.body}</body></html>`);
+      newWin.document.close();
+    }
+
+  </script>
+</body>
+</html>
